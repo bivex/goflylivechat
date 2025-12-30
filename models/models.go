@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "github.com/mattn/go-sqlite3" // SQLite driver
 	"goflylivechat/common"
 	"log"
 	"time"
@@ -22,9 +23,22 @@ func init() {
 }
 func Connect() error {
 	mysql := common.GetMysqlConf()
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", mysql.Username, mysql.Password, mysql.Server, mysql.Port, mysql.Database)
+	var dsn string
+	var dialect string
+
+	// Check if it's SQLite (no username/password) or MySQL
+	if mysql.Username == "" && mysql.Password == "" {
+		// SQLite
+		dialect = "sqlite3"
+		dsn = mysql.Database
+	} else {
+		// MySQL
+		dialect = "mysql"
+		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", mysql.Username, mysql.Password, mysql.Server, mysql.Port, mysql.Database)
+	}
+
 	var err error
-	DB, err = gorm.Open("mysql", dsn)
+	DB, err = gorm.Open(dialect, dsn)
 	if err != nil {
 		log.Println(err)
 		panic("数据库连接失败!")

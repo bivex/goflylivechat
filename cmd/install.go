@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"goflylivechat/common"
 	"goflylivechat/models"
 	"goflylivechat/tools"
 	"log"
@@ -24,11 +25,22 @@ func install() {
 		os.Exit(1)
 	}
 
+	// Determine SQL file based on database type
+	mysql := common.GetMysqlConf()
+	var sqlFile string
+
+	if mysql.Username == "" && mysql.Password == "" {
+		// SQLite
+		sqlFile = "import_sqlite.sql"
+	} else {
+		// MySQL
+		sqlFile = "import.sql"
+	}
+
 	// Verify required files exist
-	sqlFile := "import.sql"
 	dataExists, _ := tools.IsFileExist(sqlFile)
 	if !dataExists {
-		log.Println("Configuration file config/mysql.json or database import file import.sql not found")
+		log.Printf("Database import file %s not found", sqlFile)
 		os.Exit(1)
 	}
 

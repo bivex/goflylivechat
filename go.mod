@@ -2,7 +2,6 @@ module goflylivechat
 
 go 1.21
 
-
 require (
 	github.com/dchest/captcha v0.0.0-20200903113550-03f5f0333e1f
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
@@ -14,6 +13,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.14
+	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
